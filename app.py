@@ -1,10 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-
-import numpy as np
 import cv2
 import os
-import time
 
 
 class Myface:
@@ -40,11 +37,7 @@ class Myface:
 
         for letter in image:  # 第一个实例
             for garr in letter:
-                r = garr[0]
-                g = garr[1]
-                b = garr[2]
-
-
+                r, g, b = garr
                 grr = r * 0.299 + g * 0.587 + b * 0.114
                 if grr >= 150:
                     str += '.'
@@ -85,4 +78,18 @@ class Myface:
         # 释放资源
         cap.release()
         # 关闭窗口
+        cv2.destroyAllWindows()
+
+    def show(self, video=0):
+        cap = cv2.VideoCapture(video)
+        self.beforeRender()
+
+        while cap.isOpened():
+            _, frame = cap.read()
+            if frame is None:
+                break
+            resize = cv2.resize(frame, (int(800 / 10), int(500 / 10)), interpolation=cv2.INTER_CUBIC)
+            self.renderStr(resize)
+
+        cap.release()
         cv2.destroyAllWindows()
